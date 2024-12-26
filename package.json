@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "my-workspace",
+  "version": "0.0.0",
+  "workspaces": [
+    "backend",
+    "webapp"
+  ]
+}
