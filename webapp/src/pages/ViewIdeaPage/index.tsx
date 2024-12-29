@@ -23,7 +23,6 @@ export const ViewIdeaPage = () => {
 
   return (
     <div>
-      <div>hello</div>
       <h1>{data.idea.name}</h1>
       <p>{data.idea.description}</p>
       <div dangerouslySetInnerHTML={{ __html: data.idea.text }}></div>
