@@ -25,6 +25,7 @@ export const ViewIdeaPage = () => {
     <div>
       <h1>{data.idea.name}</h1>
       <p>{data.idea.description}</p>
+      <div className="created_at">Created At: {data.idea.createdAt}</div>
       <div dangerouslySetInnerHTML={{ __html: data.idea.text }}></div>
     </div>
   )

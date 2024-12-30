@@ -4,10 +4,19 @@ import { zCreateIndeaTrpcInput } from './input'
 
 export const createIdeaTrpcRoute = trpc.procedure
   .input(zCreateIndeaTrpcInput)
-  .mutation(({ input }) => {
-    if (ideas.find((idea) => idea.nick === input.nick)) {
+  .mutation(async ({ ctx, input }) => {
+    const idea = await ctx.prisma.idea.findUnique({
+      where: {
+        nick: input.nick,
+      },
+    })
+    if (idea) {
       throw new Error('Idea with this nick already exists')
     }
-    ideas.unshift(input)
+
+    await ctx.prisma.idea.create({
+      data: input,
+    })
+
     return true
   })

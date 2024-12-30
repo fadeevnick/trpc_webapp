@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres:13.0
+    container_name: ideanick_postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ideanick
+      POSTGRES_USER: ideanick
+      POSTGRES_DB: ideanick
+    volumes:
+      - ideanick_data:/var/lib/postgresql/data
+
+volumes:
+  ideanick_data:
