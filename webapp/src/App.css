@@ -18,3 +18,18 @@ body {
   border: 2px solid black;
   margin-bottom: 15px;
 }
+
+.alert {
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.red_alert {
+  background-color: #ffd1d1;
+  color: #631717;
+}
+
+.green_alert {
+  background-color: #d7ffd7;
+  color: #2b6d2b;
+}
