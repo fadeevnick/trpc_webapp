@@ -1,26 +1,19 @@
-import crypto from 'crypto'
 import { trpc } from '../../lib/trpc'
-import { zSignUpTrpcInput } from './input'
+import { zSignInTrpcInput } from './input'
 import { getPasswordHash } from '../../utils/getPasswordHash'
 
-export const signUpTrpcRoute = trpc.procedure
-  .input(zSignUpTrpcInput)
+export const signInTrpcRoute = trpc.procedure
+  .input(zSignInTrpcInput)
   .mutation(async ({ ctx, input }) => {
     const user = await ctx.prisma.user.findUnique({
       where: {
         nick: input.nick,
-      },
-    })
-    if (user) {
-      throw new Error('User with this nick already exists')
-    }
-
-    await ctx.prisma.user.create({
-      data: {
-        nick: input.nick,
         password: getPasswordHash(input.password),
       },
     })
+    if (!user) {
+      throw new Error('Wrong nick or password')
+    }
 
     return true
   })

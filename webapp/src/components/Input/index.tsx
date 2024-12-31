@@ -4,10 +4,12 @@ export const Input = ({
   name,
   label,
   formik,
+  type = 'text',
 }: {
   name: string
   label: string
   formik: FormikProps<any>
+  type?: 'text' | 'password'
 }) => {
   const value = formik.values[name]
   const error = formik.errors[name] as string | undefined
@@ -18,7 +20,7 @@ export const Input = ({
       <label htmlFor="name">{label}</label>
       <br />
       <input
-        type="text"
+        type={type}
         onChange={(e) => {
           formik.setFieldValue(name, e.target.value)
         }}
