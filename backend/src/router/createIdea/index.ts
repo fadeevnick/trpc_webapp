@@ -1,5 +1,4 @@
 import { trpc } from '../../lib/trpc'
-import { ideas } from '../../lib/ideas'
 import { zCreateIndeaTrpcInput } from './input'
 
 export const createIdeaTrpcRoute = trpc.procedure
