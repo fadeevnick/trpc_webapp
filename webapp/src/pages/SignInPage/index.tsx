@@ -5,9 +5,13 @@ import { withZodSchema } from 'formik-validator-zod'
 import { Input } from '../../components/Input'
 import { Alert } from '../../components/Alert'
 import { zSignInTrpcInput } from 'backend/src/router/signIn/input'
+import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
+import { getAllIdeasRoute } from '../../lib/routes'
 
 export const SignInPage = () => {
-  const [successMessageVisible, setSuccessMessageVisible] = useState(false)
+  const navigate = useNavigate()
+  const trpcUtils = trpc.useUtils()
   const [submittingError, setSubmittingError] = useState<string | null>(null)
 
   const signIn = trpc.signIn.useMutation()
@@ -20,12 +24,10 @@ export const SignInPage = () => {
     onSubmit: async (values) => {
       try {
         setSubmittingError(null)
-        await signIn.mutateAsync(values)
-        formik.resetForm()
-        setSuccessMessageVisible(true)
-        setTimeout(() => {
-          setSuccessMessageVisible(false)
-        }, 3000)
+        const { token } = await signIn.mutateAsync(values)
+        Cookies.set('token', token, { expires: 99999 })
+        trpcUtils.invalidate()
+        navigate(getAllIdeasRoute())
       } catch (error: any) {
         setSubmittingError(error.message)
       }
@@ -42,7 +44,6 @@ export const SignInPage = () => {
           <div style={{ color: 'red' }}>Some fields are invalid</div>
         )}
         {!!submittingError && <Alert color="red">{submittingError}</Alert>}
-        {successMessageVisible && <Alert color="green">Thanks for sign in!</Alert>}
         <button type="submit" disabled={formik.isSubmitting}>
           {formik.isSubmitting ? 'Submitting' : 'Sign in'}
         </button>
