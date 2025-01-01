@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { getEditIdeaRoute, ViewIdeaRouteParams } from '../../lib/routes'
 import { trpc } from '../../lib/trpc'
-import { LinkButton } from '../../components/LinkButton'
+import { LinkButton } from '../../components/Button'
 
 export const ViewIdeaPage = () => {
   const { ideaNick } = useParams() as ViewIdeaRouteParams
@@ -42,7 +42,7 @@ export const ViewIdeaPage = () => {
       <div className="author">Author: {idea.author.nick}</div>
       <div dangerouslySetInnerHTML={{ __html: idea.text }}></div>
       {me?.id === idea.authorId && (
-        <div className=".editButton">
+        <div>
           <LinkButton to={getEditIdeaRoute({ ideaNick: idea.nick })}>
             Edit Idea
           </LinkButton>
