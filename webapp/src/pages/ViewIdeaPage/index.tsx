@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import { getEditIdeaRoute, ViewIdeaRouteParams } from '../../lib/routes'
 import { trpc } from '../../lib/trpc'
 import { LinkButton } from '../../components/Button'
+import { useAppContext } from '../../lib/ctx'
 
 export const ViewIdeaPage = () => {
   const { ideaNick } = useParams() as ViewIdeaRouteParams
@@ -9,14 +10,10 @@ export const ViewIdeaPage = () => {
   const getIdeaResult = trpc.getIdea.useQuery({
     ideaNick,
   })
-  const getMeResult = trpc.getMe.useQuery()
 
-  if (
-    getIdeaResult.isLoading ||
-    getIdeaResult.isFetching ||
-    getMeResult.isLoading ||
-    getMeResult.isFetching
-  ) {
+  const { me } = useAppContext()
+
+  if (getIdeaResult.isLoading || getIdeaResult.isFetching) {
     return <span>Loading...</span>
   }
 
@@ -24,15 +21,11 @@ export const ViewIdeaPage = () => {
     return <span>Error: {getIdeaResult.error.message}</span>
   }
 
-  if (getMeResult.isError) {
-    return <span>Error: {getMeResult.error.message}</span>
-  }
   if (!getIdeaResult.data.idea) {
     return <span>Idea not found</span>
   }
 
   const idea = getIdeaResult.data.idea
-  const me = getMeResult.data.me
 
   return (
     <div>

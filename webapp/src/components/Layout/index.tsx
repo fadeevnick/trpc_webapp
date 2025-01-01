@@ -1,9 +1,9 @@
 import { Link, Outlet } from 'react-router-dom'
 import * as routes from '../../lib/routes'
-import { trpc } from '../../lib/trpc'
+import { useAppContext } from '../../lib/ctx'
 
 export const Layout = () => {
-  const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery()
+  const { me } = useAppContext()
 
   return (
     <div>
@@ -14,13 +14,13 @@ export const Layout = () => {
         <li>
           <Link to={routes.getAllIdeasRoute()}>All Ideas</Link>
         </li>
-        {isLoading || isFetching || isError ? null : data.me ? (
+        {me ? (
           <>
             <li>
               <Link to={routes.getNewIdeaRoute()}>Add idea</Link>
             </li>
             <li>
-              <Link to={routes.getSignOutRoute()}>Log Out ({data.me.nick})</Link>
+              <Link to={routes.getSignOutRoute()}>Log Out ({me.nick})</Link>
             </li>
           </>
         ) : (
