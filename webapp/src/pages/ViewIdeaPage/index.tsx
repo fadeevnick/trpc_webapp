@@ -1,32 +1,53 @@
 import { useParams } from 'react-router-dom'
-import { ViewIdeaRouteParams } from '../../lib/routes'
+import { getEditIdeaRoute, ViewIdeaRouteParams } from '../../lib/routes'
 import { trpc } from '../../lib/trpc'
+import { LinkButton } from '../../components/LinkButton'
 
 export const ViewIdeaPage = () => {
   const { ideaNick } = useParams() as ViewIdeaRouteParams
 
-  const { data, error, isLoading, isFetching, isError } = trpc.getIdea.useQuery({
+  const getIdeaResult = trpc.getIdea.useQuery({
     ideaNick,
   })
+  const getMeResult = trpc.getMe.useQuery()
 
-  if (isLoading || isFetching) {
+  if (
+    getIdeaResult.isLoading ||
+    getIdeaResult.isFetching ||
+    getMeResult.isLoading ||
+    getMeResult.isFetching
+  ) {
     return <span>Loading...</span>
   }
 
-  if (isError) {
-    return <span>Error: {error.message}</span>
+  if (getIdeaResult.isError) {
+    return <span>Error: {getIdeaResult.error.message}</span>
   }
 
-  if (!data.idea) {
+  if (getMeResult.isError) {
+    return <span>Error: {getMeResult.error.message}</span>
+  }
+  if (!getIdeaResult.data.idea) {
     return <span>Idea not found</span>
   }
 
+  const idea = getIdeaResult.data.idea
+  const me = getMeResult.data.me
+
   return (
     <div>
-      <h1>{data.idea.name}</h1>
-      <p>{data.idea.description}</p>
-      <div className="created_at">Created At: {data.idea.createdAt}</div>
-      <div dangerouslySetInnerHTML={{ __html: data.idea.text }}></div>
+      <h1>{idea.name}</h1>
+      <p>{idea.description}</p>
+      <div className="created_at">Created At: {idea.createdAt}</div>
+      <div className="author">Author: {idea.author.nick}</div>
+      <div dangerouslySetInnerHTML={{ __html: idea.text }}></div>
+      {me?.id === idea.authorId && (
+        <div className=".editButton">
+          <LinkButton to={getEditIdeaRoute({ ideaNick: idea.nick })}>
+            Edit Idea
+          </LinkButton>
+        </div>
+      )}
     </div>
   )
 }
