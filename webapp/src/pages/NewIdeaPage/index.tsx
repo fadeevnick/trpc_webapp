@@ -21,7 +21,7 @@ export const NewIdeaPage = () => {
       await createIdea.mutateAsync(values)
       formik.resetForm()
     },
-    successMessage: 'Idea created!',
+    successMessage: 'Idea created!!!',
     showValidationAlert: true,
   })
 
